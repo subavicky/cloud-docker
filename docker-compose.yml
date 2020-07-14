@@ -1,0 +1,38 @@
+version: "3.7"
+
+services:
+  # Build the boschleni application image
+  app:
+    build:
+      context: py_server
+    image: cloud_server
+    container_name: cloud_server
+    depends_on: 
+      - pgsql    
+    ports:       
+      - "11000:11000"
+    networks: 
+      - my-net
+    volumes:
+      - requests:/app/requests
+
+  # Build postgresql image
+  pgsql:   
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    container_name: pgsql
+    expose: 
+      - "5432"
+    networks: 
+      - my-net
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+networks:
+  my-net:
+    driver: bridge
+    
+volumes:
+  requests:  # req
+  pgdata:    # psl
